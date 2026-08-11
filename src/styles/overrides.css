@@ -1,0 +1,129 @@
+/* Small additions on top of the original template styles. */
+
+.portfolio-links {
+  margin-top: 12px;
+}
+
+.portfolio-links a {
+  display: inline-block;
+  margin-right: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #ff3c00;
+}
+
+.portfolio-links a:hover {
+  text-decoration: underline;
+}
+
+/* Equal-height portfolio cards: the column element is also .portfolio-box, so
+   stretch it and pin the call-to-action to the bottom regardless of how long
+   the description runs. Keeps every row's cards ending on the same line. */
+.tcd-portfolio .row.grid {
+  align-items: stretch;
+}
+
+.tcd-portfolio .portfolio-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.tcd-portfolio .portfolio-box .description {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.tcd-portfolio .portfolio-box .portfolio-links {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+/* "Load more" control under the portfolio grid. The template has no reusable
+   button class outside .tcd-banner, so the green pill is restated here. */
+.portfolio-more {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.portfolio-more button {
+  color: #fff;
+  font-weight: 500;
+  background: #5bbc2e;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 30px;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  transition: 0.3s ease all;
+}
+
+.portfolio-more button:hover {
+  background: #494949;
+}
+
+.portfolio-more .portfolio-count {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #888;
+}
+
+/* Keep the rotating headline words from stacking before JS measures them. */
+.cd-headline.clip .cd-words-wrapper b {
+  white-space: nowrap;
+}
+
+/* --- Scroll-reveal animations (see components/Reveal.jsx) --- */
+.reveal {
+  opacity: 0;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-up {
+  transform: translateY(40px);
+}
+.reveal-down {
+  transform: translateY(-40px);
+}
+.reveal-left {
+  transform: translateX(40px);
+}
+.reveal-right {
+  transform: translateX(-40px);
+}
+.reveal-none {
+  transform: none;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Smooth hover transitions on the interactive cards/links. */
+.portfolio-item,
+.portfolio-item img,
+.tcd-services .services-item,
+.banner-btn,
+.readon,
+.hire-me-btn a {
+  transition: transform 0.35s ease, box-shadow 0.35s ease,
+    background-color 0.35s ease, color 0.35s ease;
+}
+.portfolio-item:hover {
+  transform: translateY(-6px);
+}
+
+/* Users who prefer reduced motion get no movement. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
