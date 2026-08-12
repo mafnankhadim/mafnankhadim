@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { navLinks } from "../data/content.js";
+import { navLinks, FIVERR_URL } from "../data/content.js";
 
 // Smooth-scroll to a section id, accounting for the fixed header height.
 function scrollToSection(id) {
@@ -79,7 +79,7 @@ export default function Header() {
                 <ul className="nav-menu">{renderMenu()}</ul>
                 <div className="hire-me-btn">
                   <a
-                    href="https://wa.me/923333395115"
+                    href={FIVERR_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

@@ -1,4 +1,5 @@
 import { socialLinks } from "../data/content.js";
+import SocialIcon from "./SocialIcon.jsx";
 
 export default function Copyright() {
   return (
@@ -24,7 +25,7 @@ export default function Copyright() {
                     aria-label={social.label}
                     title={social.label}
                   >
-                    <i className={social.icon} aria-hidden="true"></i>
+                    <SocialIcon social={social} />
                   </a>
                 </li>
               ))}

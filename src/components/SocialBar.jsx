@@ -1,4 +1,5 @@
 import { socialLinks } from "../data/content.js";
+import SocialIcon from "./SocialIcon.jsx";
 
 // Fixed vertical social rail pinned to the bottom-left of the viewport.
 // Desktop only: the footer already lists the same links, so on narrow screens
@@ -16,7 +17,7 @@ export default function SocialBar() {
               aria-label={social.label}
               title={social.label}
             >
-              <i className={social.icon} aria-hidden="true"></i>
+              <SocialIcon social={social} />
             </a>
           </li>
         ))}

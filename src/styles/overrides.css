@@ -67,6 +67,21 @@
   transform: translateY(-3px);
 }
 
+/* Inline brand marks (Fiverr) sit alongside Font Awesome glyphs, so they are
+   sized in `em` off the surrounding font-size and inherit its colour via
+   fill="currentColor". 1.5em wide keeps the wordmark clear of the rail's
+   40px circle; the height follows the cropped 24:7.176 viewBox. */
+.social-svg {
+  width: 1.5em;
+  height: 0.45em;
+  display: block;
+}
+
+.tcd-copyright .footer-share .social-svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 /* Thin rule running down to the bottom edge, a common portfolio detail. */
 .social-bar-line {
   width: 1px;
