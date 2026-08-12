@@ -26,13 +26,13 @@ export const services = [
     icon: "fa fa-globe",
     title: "Web Design",
     description:
-      "Designing clean, responsive, and user-friendly websites using HTML, CSS, and Bootstrap for seamless experience across devices.",
+      "Designing clean, responsive websites with HTML, CSS and Bootstrap that read well on every screen size, from phones to desktops.",
   },
   {
     icon: "fa fa-briefcase",
     title: "Web Development",
     description:
-      "Building full-stack web applications leveraging React.js, Node.js, and the MERN stack with focus on performance and scalability.",
+      "Building full-stack web applications with React.js, Node.js and the MERN stack, with a focus on performance and scalability.",
   },
   {
     icon: "fa fa-mobile",
@@ -42,20 +42,25 @@ export const services = [
   },
 ];
 
+// Kept deliberately short: eight bars read as a summary, a dozen reads as a
+// wall. Overlapping entries (Bootstrap, Express.js, "MERN Stack") are covered
+// by the paragraph above the bars instead.
 export const skills = [
-  { label: "HTML5 + CSS3", value: 92 },
-  { label: "Bootstrap", value: 88 },
+  { label: "HTML5 + CSS3", value: 95 },
   { label: "JavaScript", value: 90 },
-  { label: "React.js", value: 85 },
-  { label: "Node.js", value: 80 },
-  { label: "MERN Stack", value: 82 },
+  { label: "TypeScript", value: 85 },
+  { label: "React.js", value: 92 },
+  { label: "Redux Toolkit", value: 88 },
+  { label: "Node.js", value: 88 },
+  { label: "MongoDB", value: 87 },
+  { label: "React Native", value: 80 },
 ];
 
 export const contactInfo = [
   {
     icon: "fa fa-map-marker",
-    title: "Our Address",
-    value: "Lahore, Punjab Pakistan",
+    title: "Location",
+    value: "Lahore, Punjab, Pakistan",
   },
   {
     icon: "fa fa-envelope-o",
@@ -72,11 +77,44 @@ export const contactInfo = [
   },
 ];
 
+// `label` is used for the accessible name on the icon-only links.
 export const socialLinks = [
-  { icon: "fa fa-facebook", href: "https://www.facebook.com/afnan.khadim630/" },
-  { icon: "fa fa-twitter", href: "https://x.com/mafnankhadim" },
-  { icon: "fa fa-linkedin", href: "https://www.linkedin.com/in/m-afnan-khadim/" },
-  { icon: "fa fa-instagram", href: "https://www.instagram.com/m._.afnan._.khadim/" },
+  {
+    icon: "fa fa-github",
+    label: "GitHub",
+    href: "https://github.com/mafnankhadim",
+  },
+  {
+    icon: "fa fa-linkedin",
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/m-afnan-khadim/",
+  },
+  {
+    icon: "fa fa-facebook",
+    label: "Facebook",
+    href: "https://www.facebook.com/afnan.khadim630/",
+  },
+  {
+    icon: "fa fa-twitter",
+    label: "X",
+    href: "https://x.com/mafnankhadim",
+  },
+  {
+    icon: "fa fa-instagram",
+    label: "Instagram",
+    href: "https://www.instagram.com/m._.afnan._.khadim/",
+  },
+];
+
+// Footer "Find me on" column. Replaces the template's placeholder Support
+// links (Help Center / Partner Program / Privacy Policy), which went nowhere.
+export const footerLinks = [
+  { label: "GitHub", href: "https://github.com/mafnankhadim" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/m-afnan-khadim/" },
+  {
+    label: "Google Play",
+    href: "https://play.google.com/store/apps/dev?id=6481132732585787649",
+  },
 ];
 
 // Web3Forms access key (public-by-design; lives in the original markup).

@@ -8,8 +8,8 @@ export default function Copyright() {
           <div className="col-md-6">
             <div className="copyright-text">
               <p>
-                © 2025 <a href="#tcd-banner">M Afnan Khadim</a>. All Rights
-                Reserved.
+                © {new Date().getFullYear()}{" "}
+                <a href="#tcd-banner">M Afnan Khadim</a>. All Rights Reserved.
               </p>
             </div>
           </div>
@@ -21,8 +21,10 @@ export default function Copyright() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={social.label}
+                    title={social.label}
                   >
-                    <i className={social.icon}></i>
+                    <i className={social.icon} aria-hidden="true"></i>
                   </a>
                 </li>
               ))}

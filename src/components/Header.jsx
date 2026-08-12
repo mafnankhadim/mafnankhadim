@@ -91,12 +91,14 @@ export default function Header() {
                     className="nav-expander fixed"
                     href="#"
                     id="nav-expander"
+                    aria-label="Toggle navigation"
+                    aria-expanded={navOpen}
                     onClick={(e) => {
                       e.preventDefault();
                       setNavOpen((v) => !v);
                     }}
                   >
-                    <i className="fa fa-bars fa-lg white"></i>
+                    <i className="fa fa-bars fa-lg white" aria-hidden="true"></i>
                   </a>
                 </span>
               </div>

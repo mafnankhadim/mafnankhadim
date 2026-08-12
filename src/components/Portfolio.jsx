@@ -32,9 +32,9 @@ export default function Portfolio() {
             My Creative <span>Portfolio</span>
           </h2>
           <p>
-            Showcasing web design and full-stack development work built with
-            React and Node.js, alongside published Android apps on Google Play
-            — from point-of-sale systems to everyday utility tools.
+            Web design and full-stack development work built with React and
+            Node.js, alongside published Android apps on Google Play, from
+            point-of-sale systems to everyday utility tools.
           </p>
         </Reveal>
 

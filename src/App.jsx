@@ -8,6 +8,7 @@ import ContactForm from "./components/ContactForm.jsx";
 import Footer from "./components/Footer.jsx";
 import Copyright from "./components/Copyright.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import SocialBar from "./components/SocialBar.jsx";
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
       </main>
       <Footer />
       <Copyright />
+      <SocialBar />
       <ScrollToTop />
     </>
   );

@@ -1,9 +1,9 @@
-# Afnan Khadim — Portfolio (React + Vite)
+# Afnan Khadim, Portfolio (React + Vite)
 
 A React + Vite rebuild of the original static portfolio. All jQuery plugin
 behaviour (sticky header, one-page nav scroll-spy, mobile menu, About tabs,
 animated skill bars, portfolio filter, headline text rotator, scroll-to-top,
-Web3Forms contact form) is reimplemented with React hooks — no jQuery.
+Web3Forms contact form) is reimplemented with React hooks, no jQuery.
 
 ## Commands
 
@@ -25,7 +25,7 @@ src/
   components/           # one component per section
   data/
     content.js          # nav, services, skills, contact info, social links
-    portfolio.js        # projects with descriptions + GitHub/live links
+    portfolio.js        # projects with descriptions + GitHub / Play Store links
   styles/overrides.css  # small additions on top of the template CSS
 ```
 
@@ -35,6 +35,7 @@ src/
   `url(...)` paths keep working unchanged; stylesheets are linked from
   `index.html`.
 - Project descriptions and links in `src/data/portfolio.js` point to the real
-  GitHub repos / live demos at https://github.com/mafnankhadim.
+  GitHub repos at https://github.com/mafnankhadim, and to the published Android
+  apps on Google Play. There are deliberately no live-demo links.
 - The Web3Forms access key in `src/data/content.js` is public by design (it was
   already in the original client-side markup).

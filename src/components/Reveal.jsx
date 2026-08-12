@@ -18,7 +18,7 @@ export default function Reveal({
     const el = ref.current;
     if (!el) return;
 
-    // Respect users who prefer reduced motion — show immediately, no animation.
+    // Respect users who prefer reduced motion: show immediately, no animation.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setVisible(true);
       return;

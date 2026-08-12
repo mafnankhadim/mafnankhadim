@@ -58,7 +58,7 @@ export const projects = [
     category: "Web Development",
     filters: ["filter2"],
     description:
-      "A complete authentication system built on the MERN stack with secure registration and login, hashed credentials, JWT-based sessions and personalized user pages. Fully responsive with real-time validation for a seamless, secure sign-in experience.",
+      "A complete authentication system built on the MERN stack with secure registration and login, hashed credentials, JWT-based sessions and personalized user pages. Fully responsive, with real-time validation on every field so users know what went wrong before they submit.",
     link: "https://github.com/mafnankhadim/Signin-Signup-Using-MERN-Stack",
   },
   {

@@ -18,6 +18,90 @@
   text-decoration: underline;
 }
 
+/* --- Fixed vertical social rail (see components/SocialBar.jsx) ---
+   Sits bottom-left so it never collides with the scroll-to-top button on the
+   right. Hidden below 992px, where the footer links serve the same purpose. */
+.social-bar {
+  position: fixed;
+  left: 45px;
+  bottom: 0;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-bar ul {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-bar li + li {
+  margin-top: 6px;
+}
+
+/* 20px glyph in a 40px square: comfortably tappable and visually balanced
+   against the rest of the page rather than reading as an afterthought. */
+.social-bar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  line-height: 1;
+  color: #6f6f6f;
+  transition: color 0.3s ease, background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.social-bar a:hover,
+.social-bar a:focus-visible {
+  color: #5bbc2e;
+  background-color: rgba(91, 188, 46, 0.12);
+  transform: translateY(-3px);
+}
+
+/* Thin rule running down to the bottom edge, a common portfolio detail. */
+.social-bar-line {
+  width: 1px;
+  height: 100px;
+  background: #bdbdbd;
+}
+
+@media only screen and (max-width: 1199px) {
+  .social-bar {
+    display: none;
+  }
+}
+
+/* Skill bars in two columns so the list reads as a compact summary rather
+   than one long stack. Collapses to a single column on small screens. */
+.about-skills .skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 40px;
+}
+
+/* The template gives the first bar margin-top:30px and every following
+   sibling 60px. In a grid that leaves the first item sitting half a step
+   above its row partner, so even out the spacing for all of them. */
+.tcd-about .about-skills .skills-grid .progress,
+.tcd-about .about-skills .skills-grid .progress + .progress {
+  margin-top: 45px;
+}
+
+@media only screen and (max-width: 767px) {
+  .about-skills .skills-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* Equal-height portfolio cards: the column element is also .portfolio-box, so
    stretch it and pin the call-to-action to the bottom regardless of how long
    the description runs. Keeps every row's cards ending on the same line. */
