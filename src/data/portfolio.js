@@ -15,6 +15,16 @@ export const portfolioFilters = [
 
 export const projects = [
   {
+    title: "Aniza Ladies Tailor",
+    image: "/images/portfolio/aniza.png",
+    category: "Web Development",
+    filters: ["filter2"],
+    description:
+      "A multi-page website for a ladies-only suit tailoring house in Lahore, built with Next.js and TypeScript. Covers services, custom stitching, a work gallery, a measurement guide and international orders, and turns every order and contact form into a ready-written WhatsApp message so the shop needs no backend to receive them.",
+    link: "https://anizaladiestailor.com/",
+    linkLabel: "Visit Website",
+  },
+  {
     title: "BytePOS",
     image: "/images/portfolio/app-bytepos.png",
     category: "Mobile App Development",
