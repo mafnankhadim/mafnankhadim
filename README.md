@@ -17,8 +17,8 @@ npm run preview  # serve the production build locally
 
 `npm run dev` also runs the AI assistant's serverless function (see
 `vite.config.js`), so the chat widget works locally as soon as a `.env` with
-`CHAT_API_KEY` exists — no Netlify CLI needed. `npx netlify dev` also works if
-you want the full Netlify environment.
+`CHAT_API_KEY` exists — no Vercel CLI needed. `vercel dev` also works if you
+want the full Vercel environment.
 
 ## Structure
 
@@ -48,9 +48,9 @@ src/
 
 ## AI assistant
 
-The floating chat bubble (`src/components/Chatbot.jsx`) posts to a Netlify
-function, `netlify/functions/chat.js`, which adds the system prompt and the
-model API key before calling the provider. The key therefore never reaches the
+The floating chat bubble (`src/components/Chatbot.jsx`) posts to `/api/chat`,
+a Vercel serverless function (`api/chat.js`) that adds the system prompt and
+the model API key before calling the provider. The key therefore never reaches the
 browser — unlike the Web3Forms key, it must stay secret.
 
 The function's knowledge about Afnan lives in `src/data/chatbot.js`, and its
@@ -58,9 +58,9 @@ project list is generated from `src/data/portfolio.js`, so the assistant can't
 describe a project that is no longer on the site. Edit the bio, greeting or
 suggestion chips there.
 
-Configure the provider with environment variables — in Netlify under
-Site settings → Environment variables, and locally in a `.env` (see
-`.env.example`):
+Configure the provider with environment variables — on Vercel under
+Settings → Environment Variables (or `vercel env add`), and locally in a `.env`
+(see `.env.example`):
 
 | Variable | Required | Default |
 | --- | --- | --- |
@@ -75,4 +75,4 @@ contact form.
 
 Locally the same function is served by a small Vite dev-server plugin in
 `vite.config.js`, which reads `.env` and mounts the handler at the same
-`/.netlify/functions/chat` path Netlify uses in production.
+`/api/chat` path Vercel serves in production.

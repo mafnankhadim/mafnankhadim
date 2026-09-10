@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import ChatMessage from "./ChatMessage.jsx";
-import {
-  ASSISTANT_NAME,
-  CHAT_ENDPOINT,
-  GREETING,
-  SUGGESTIONS,
-} from "../data/chatbot.js";
+import { ASSISTANT_NAME, GREETING, SUGGESTIONS } from "../data/chatbot.js";
+
+// Vercel serves api/chat.js here in production; vite.config.js mounts the same
+// handler at the same path in dev. Override with VITE_CHAT_ENDPOINT if the
+// function is ever hosted elsewhere.
+const CHAT_ENDPOINT = import.meta.env.VITE_CHAT_ENDPOINT || "/api/chat";
 
 // Floating AI assistant: a launcher bubble in the bottom-right corner that
 // opens a side panel (not a full-screen takeover). The API key lives in the
-// Netlify function this posts to — see netlify/functions/chat.js.
+// serverless function this posts to — see api/chat.js.
 
 const STORAGE_KEY = "afnan-chat";
 
@@ -83,8 +83,8 @@ export default function Chatbot() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ messages: next }),
       });
-      // A non-JSON 200 means the function isn't running (plain `npm run dev`
-      // serves index.html here) — treat it as an outage, not an empty answer.
+      // A non-JSON 200 means the function isn't running (a plain static host
+      // would serve index.html here) — an outage, not an empty answer.
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.reply) {
         throw new Error(

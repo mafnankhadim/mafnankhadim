@@ -3,7 +3,7 @@
 // The project list is generated from portfolio.js rather than retyped, so the
 // assistant can never describe a project that is no longer on the site. This
 // module is imported by BOTH the React widget (for the greeting/suggestions)
-// and the Netlify function (for the system prompt) — keep it free of JSX and
+// and the Vercel function (for the system prompt) — keep it free of JSX and
 // of anything browser-only.
 
 import { projects } from "./portfolio.js";
@@ -20,12 +20,6 @@ export const SUGGESTIONS = [
   "What's your tech stack?",
   "How can I contact you?",
 ];
-
-// Endpoint the widget posts to. Netlify serves functions from this path in
-// production and under `netlify dev` locally; override with VITE_CHAT_ENDPOINT
-// if the function is ever hosted elsewhere.
-export const CHAT_ENDPOINT =
-  import.meta.env?.VITE_CHAT_ENDPOINT || "/.netlify/functions/chat";
 
 // Only the first sentence of each project's description goes into the prompt.
 // The full text is on the page anyway, and the system prompt is re-sent on

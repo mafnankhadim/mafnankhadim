@@ -15,7 +15,7 @@ npm run build    # production build into dist/
 npm run preview  # serve the production build locally
 ```
 
-`npm run dev` also serves the AI assistant's function: a dev-only Vite plugin in `vite.config.js` loads `.env` and mounts `netlify/functions/chat.js` at `/.netlify/functions/chat`, the same path Netlify serves in production. Without that plugin Vite answers the path with `index.html`, which is why the widget guards on a missing `reply` rather than trusting a 200.
+`npm run dev` also serves the AI assistant's function: a dev-only Vite plugin in `vite.config.js` loads `.env` and mounts `api/chat.js` at `/api/chat`, the same path Vercel serves in production. Without that plugin Vite answers the path with `index.html`, which is why the widget guards on a missing `reply` rather than trusting a 200.
 
 There is no lint or test setup, and no single-test command — verify changes by running `npm run dev` and checking the browser.
 
@@ -25,7 +25,7 @@ The defining constraint: **components reuse the original template's CSS by rende
 
 - **`src/App.jsx`** — composes the page: `Header`, then a `<main>` of section components (`Banner`, `About`, `Services`, `Portfolio`, `ContactInfo`, `ContactForm`), then `Footer`, `Copyright`, `ScrollToTop`. One component per section, each ~self-contained.
 - **`src/data/content.js`** and **`src/data/portfolio.js`** — all copy, nav links, services, skills, contact/social details, and portfolio projects live here as exported arrays. Components map over this data; edit content here, not in JSX.
-- **`netlify/functions/chat.js`** — the only server-side code in the repo; see "AI assistant" below.
+- **`api/chat.js`** — the only server-side code in the repo, deployed as a Vercel function; see "AI assistant" below.
 - **`src/components/`** — thin presentational components. The ones that replace jQuery plugins own their behavior via hooks: `Header.jsx` (scroll listener for sticky + scroll-spy, `nav-expanded` body class for the mobile menu), `Banner.jsx` (`setInterval` headline rotator), `About.jsx` (tab state + one-shot skill-bar width animation), `Portfolio.jsx` (client-side filter by `filters` array), `ScrollToTop.jsx`.
 
 ### Section ids ↔ nav are coupled
@@ -40,9 +40,9 @@ App card images are pre-composed 1200×600 PNGs (`public/images/portfolio/app-*.
 
 ## AI assistant
 
-`Chatbot.jsx` is a floating launcher bubble plus a side panel (deliberately not the full-screen layout of the sibling reference project in `../chatbot`). It posts the transcript to `netlify/functions/chat.js`, which is what makes the widget worth its complexity: the model API key is a Netlify env var (`CHAT_API_KEY`, plus optional `CHAT_API_URL` / `CHAT_MODEL` for any OpenAI-compatible provider) and never reaches the browser. Contrast the Web3Forms key, which is public by design.
+`Chatbot.jsx` is a floating launcher bubble plus a side panel (deliberately not the full-screen layout of the sibling reference project in `../chatbot`). It posts the transcript to `/api/chat`, which is what makes the widget worth its complexity: the model API key is a Vercel env var (`CHAT_API_KEY`, plus optional `CHAT_API_URL` / `CHAT_MODEL` for any OpenAI-compatible provider) and never reaches the browser. Contrast the Web3Forms key, which is public by design.
 
-The system prompt is assembled **in the function**, not sent by the client, so a visitor can't swap it out with a crafted request; the function also drops any client-supplied `system` message and caps history at 16 messages × 1500 chars. Both the widget and the function import `src/data/chatbot.js` — keep that file free of JSX and browser-only APIs, since esbuild bundles it into the function (`node_bundler = "esbuild"` in `netlify.toml` exists for exactly this).
+The system prompt is assembled **in the function**, not sent by the client, so a visitor can't swap it out with a crafted request; the function also drops any client-supplied `system` message and caps history at 16 messages × 1500 chars. Both the widget and the function import `src/data/chatbot.js` — keep that file free of JSX, browser-only APIs and `import.meta`, since the function's bundler cannot resolve them. That is why the endpoint constant lives in `Chatbot.jsx` rather than alongside the greeting.
 
 `chatbot.js` generates its project list from `portfolio.js` rather than restating it, so the assistant cannot describe a project the site no longer shows. Edit the bio, greeting and suggestion chips there, not in the component.
 

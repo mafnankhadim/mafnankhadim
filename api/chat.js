@@ -1,4 +1,5 @@
-// Netlify Function backing the site's AI assistant (src/components/Chatbot.jsx).
+// Vercel Serverless Function backing the site's AI assistant
+// (src/components/Chatbot.jsx), served at /api/chat.
 //
 // It exists purely to keep the model API key off the client: the browser posts
 // a conversation here, this function adds the system prompt and the secret key
@@ -12,7 +13,7 @@
 // The system prompt is built here rather than sent by the browser, so a
 // visitor cannot swap it out by crafting their own request.
 
-import { KNOWLEDGE } from "../../src/data/chatbot.js";
+import { KNOWLEDGE } from "../src/data/chatbot.js";
 
 const API_URL =
   process.env.CHAT_API_URL ||
@@ -28,27 +29,24 @@ const API_KEY =
 const MAX_MESSAGES = 16;
 const MAX_CHARS = 1500;
 
-const json = (status, body) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { "content-type": "application/json" },
-  });
-
-export default async (request) => {
-  if (request.method !== "POST") {
-    return json(405, { error: "Method not allowed" });
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
   if (!API_KEY) {
-    return json(500, {
+    return res.status(500).json({
       error: "The assistant is not configured yet (missing CHAT_API_KEY).",
     });
   }
 
-  let payload;
-  try {
-    payload = await request.json();
-  } catch {
-    return json(400, { error: "Invalid JSON body" });
+  // Vercel parses a JSON body for us; fall back for anything it hands back raw.
+  let payload = req.body;
+  if (typeof payload === "string") {
+    try {
+      payload = JSON.parse(payload);
+    } catch {
+      return res.status(400).json({ error: "Invalid JSON body" });
+    }
   }
 
   const incoming = Array.isArray(payload?.messages) ? payload.messages : [];
@@ -63,7 +61,7 @@ export default async (request) => {
     .map((m) => ({ role: m.role, content: m.content.slice(0, MAX_CHARS) }));
 
   if (!messages.length) {
-    return json(400, { error: "No message to answer" });
+    return res.status(400).json({ error: "No message to answer" });
   }
 
   let upstream;
@@ -81,14 +79,14 @@ export default async (request) => {
         messages: [{ role: "system", content: KNOWLEDGE }, ...messages],
       }),
     });
-  } catch (err) {
-    return json(502, { error: "Could not reach the AI service." });
+  } catch {
+    return res.status(502).json({ error: "Could not reach the AI service." });
   }
 
   if (!upstream.ok) {
     // Log the provider's reason for the site owner; keep it out of the reply.
     console.error("AI provider error", upstream.status, await upstream.text());
-    return json(502, {
+    return res.status(502).json({
       error:
         upstream.status === 429
           ? "The assistant is busy right now — please try again in a moment."
@@ -99,7 +97,9 @@ export default async (request) => {
   const data = await upstream.json();
   const reply = data?.choices?.[0]?.message?.content?.trim();
 
-  if (!reply) return json(502, { error: "Empty response from the AI service." });
+  if (!reply) {
+    return res.status(502).json({ error: "Empty response from the AI service." });
+  }
 
-  return json(200, { reply });
-};
+  return res.status(200).json({ reply });
+}
