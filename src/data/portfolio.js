@@ -63,6 +63,16 @@ export const projects = [
     link: "https://github.com/mafnankhadim/Restaurant-Reservation-Using-MERN-Stack",
   },
   {
+    title: "Test Cracker (Android)",
+    image: "/images/portfolio/app-testcracker.png",
+    category: "Mobile App Development",
+    filters: ["filter3"],
+    description:
+      "The Android edition of Test Cracker, built for Pakistan's entry tests and government job exams (MDCAT, ECAT, PPSC, FPSC, NTS, CSS). Chapter-wise question banks, timed mock tests with negative marking, a daily quiz with streaks and a leaderboard, and subject-wise accuracy stats — all working fully offline.",
+    link: `${PLAY}com.testcracker.app`,
+    linkLabel: "Google Play",
+  },
+  {
     title: "Authentication System (MERN)",
     image: "/images/portfolio/auth-mern.png",
     category: "Web Development",
