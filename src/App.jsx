@@ -9,6 +9,7 @@ import Footer from "./components/Footer.jsx";
 import Copyright from "./components/Copyright.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import SocialBar from "./components/SocialBar.jsx";
+import Chatbot from "./components/Chatbot.jsx";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
       <Copyright />
       <SocialBar />
       <ScrollToTop />
+      <Chatbot />
     </>
   );
 }

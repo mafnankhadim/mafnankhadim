@@ -226,3 +226,449 @@
     transition: none;
   }
 }
+
+/* --- Floating AI assistant (see components/Chatbot.jsx) ---------------------
+   A launcher bubble in the bottom-right corner with a side panel above it,
+   rather than the reference project's full-screen chat. Sits in the template's
+   green (#5bbc2e) so it reads as part of the site, not a bolted-on widget. */
+
+.chatbot-launcher {
+  position: fixed;
+  right: 40px;
+  bottom: 40px;
+  z-index: 1000;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  background: #5bbc2e;
+  box-shadow: 0 10px 26px rgba(91, 188, 46, 0.42);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.chatbot-launcher:hover,
+.chatbot-launcher:focus-visible {
+  transform: scale(1.06);
+  background: #4da627;
+}
+
+.chatbot-launcher.is-open {
+  background: #494949;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+}
+
+/* Slow halo on the closed launcher — enough to catch the eye on a first
+   visit without the widget nagging. */
+.chatbot-ping {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid #5bbc2e;
+  animation: chatbot-ping 2.4s ease-out infinite;
+}
+
+@keyframes chatbot-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* The template pins the scroll-to-top rocket to the same corner, so move it
+   above the launcher instead of letting the two overlap. */
+#toTop {
+  bottom: 112px;
+}
+
+.chatbot-panel {
+  position: fixed;
+  right: 40px;
+  bottom: 112px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  height: 540px;
+  max-height: calc(100vh - 180px);
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  /* Closed: kept in the DOM but inert, so the transcript survives a close. */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.98);
+  transform-origin: bottom right;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+}
+
+.chatbot-panel.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.chatbot-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+  padding: 14px 16px;
+  background: #5bbc2e;
+  color: #fff;
+  /* User bubbles are the same green, so without an edge a message scrolling
+     under the bar looks like part of it. */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.chatbot-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  overflow: hidden;
+}
+
+.chatbot-avatar img {
+  width: 26px;
+  height: auto;
+}
+
+.chatbot-identity {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.chatbot-identity strong {
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Green dot before "Online", the usual live-support cue. */
+.chatbot-status {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.chatbot-status::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: #d6ff9e;
+  vertical-align: middle;
+}
+
+.chatbot-close {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.16);
+  transition: background-color 0.3s ease;
+}
+
+.chatbot-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.chatbot-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 16px;
+  background: #f7f8f7;
+}
+
+.chatbot-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chatbot-body::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: #d5d9d5;
+}
+
+.chatbot-msg {
+  max-width: 85%;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #454545;
+  background: #fff;
+  border: 1px solid #e8ebe8;
+  border-bottom-left-radius: 4px;
+  /* break-word, not anywhere: `anywhere` split email addresses mid-word.
+     Long link labels are already capped in ChatMessage.jsx. */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.chatbot-msg.user {
+  margin-left: auto;
+  color: #fff;
+  background: #5bbc2e;
+  border-color: #5bbc2e;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 4px;
+}
+
+.chatbot-msg p,
+.chatbot-msg li {
+  /* The template colours every `p` #454545, which would win over the white
+     text on the green user bubble. */
+  color: inherit;
+}
+
+.chatbot-msg p {
+  margin: 0 0 8px;
+}
+
+.chatbot-msg p:last-child,
+.chatbot-msg ul:last-child,
+.chatbot-msg ol:last-child {
+  margin-bottom: 0;
+}
+
+.chatbot-msg ul,
+.chatbot-msg ol {
+  margin: 0 0 8px;
+  padding-left: 18px;
+}
+
+/* The template resets `ul` to list-style:none globally, which would leave the
+   assistant's bullet lists as unmarked indented lines. */
+.chatbot-msg ul {
+  list-style: disc;
+}
+
+.chatbot-msg ol {
+  list-style: decimal;
+}
+
+.chatbot-msg li {
+  margin-bottom: 4px;
+}
+
+.chatbot-msg a {
+  color: #3f8f1d;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.chatbot-msg.user a {
+  color: #fff;
+}
+
+.chatbot-msg code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Three-dot typing indicator while the function is round-tripping. */
+.chatbot-typing {
+  display: flex;
+  gap: 5px;
+  width: auto;
+  max-width: 70px;
+  padding: 14px;
+}
+
+.chatbot-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9aa79a;
+  animation: chatbot-blink 1.2s infinite ease-in-out both;
+}
+
+.chatbot-typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.chatbot-typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes chatbot-blink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+.chatbot-error {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #a13a2a;
+  background: #fdece9;
+}
+
+.chatbot-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 16px 0;
+  background: #fff;
+}
+
+.chatbot-chips button {
+  padding: 7px 14px;
+  border: 1px solid #cfe8c0;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #3f8f1d;
+  background: #f2faec;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.chatbot-chips button:hover {
+  color: #fff;
+  background: #5bbc2e;
+  border-color: #5bbc2e;
+}
+
+.chatbot-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px 6px;
+  background: #fff;
+}
+
+.chatbot-input input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 42px;
+  padding: 0 16px;
+  border: 1px solid #e0e4e0;
+  border-radius: 30px;
+  outline: none;
+  font-size: 14px;
+  color: #454545;
+  background: #f7f8f7;
+  transition: border-color 0.3s ease;
+}
+
+.chatbot-input input:focus {
+  border-color: #5bbc2e;
+}
+
+.chatbot-input button {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  font-size: 15px;
+  background: #5bbc2e;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.chatbot-input button:hover:not(:disabled) {
+  background: #4da627;
+}
+
+.chatbot-input button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.chatbot-note {
+  margin: 0;
+  padding: 0 16px 12px;
+  font-size: 11px;
+  text-align: center;
+  color: #9aa79a;
+  background: #fff;
+}
+
+/* Phones: a near-full-width sheet, and everything pulled in from the corner
+   so the launcher, the rocket and the panel all stay on screen. */
+@media only screen and (max-width: 767px) {
+  .chatbot-launcher {
+    right: 20px;
+    bottom: 20px;
+    width: 52px;
+    height: 52px;
+    font-size: 21px;
+  }
+
+  #toTop {
+    right: 20px;
+    bottom: 84px;
+  }
+
+  .chatbot-panel {
+    right: 16px;
+    left: 16px;
+    bottom: 84px;
+    width: auto;
+    max-width: none;
+    height: auto;
+    max-height: calc(100vh - 110px);
+    /* Enough room for the greeting, chips and a couple of answers. */
+    min-height: min(420px, calc(100vh - 110px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chatbot-panel,
+  .chatbot-launcher {
+    transition: opacity 0.2s ease, visibility 0.2s;
+    transform: none;
+  }
+
+  .chatbot-panel.is-open {
+    transform: none;
+  }
+
+  .chatbot-ping,
+  .chatbot-typing span {
+    animation: none;
+  }
+}
