@@ -1,11 +1,11 @@
 // Static content for the navigation, services, skills and contact details.
 
 export const navLinks = [
-  { label: "Home", target: "tcd-banner" },
-  { label: "About", target: "tcd-about" },
-  { label: "Services", target: "tcd-services" },
-  { label: "Works", target: "tcd-portfolio" },
-  { label: "Contact", target: "tcd-contact" },
+  { label: "Home", target: "home" },
+  { label: "About", target: "about" },
+  { label: "Services", target: "services" },
+  { label: "Work", target: "work" },
+  { label: "Contact", target: "contact" },
 ];
 
 // Rotating job titles in the banner headline (see components/Banner.jsx).
@@ -16,6 +16,11 @@ export const bannerRoles = [
   "Web Designer",
 ];
 
+// Sub-headline under the rotating roles in the banner.
+export const bannerLead =
+  "I build production React and Node.js applications for government and " +
+  "healthcare clients, and publish offline-first Android apps on Google Play.";
+
 // CV lives on Google Drive rather than in public/, so it can be swapped
 // without redeploying the site.
 export const CV_URL =
@@ -25,24 +30,41 @@ export const CV_URL =
 // /seller_dashboard URL, which only resolves for a logged-in seller.
 export const FIVERR_URL = "https://www.fiverr.com/mafnan_dev";
 
+// `points` are the concrete deliverables listed on each service card — they
+// keep the cards from being three sentences floating in empty space.
 export const services = [
   {
     icon: "fa fa-globe",
     title: "Web Design",
     description:
-      "Designing clean, responsive websites with HTML, CSS and Bootstrap that read well on every screen size, from phones to desktops.",
+      "Clean, responsive interfaces that read well on every screen size, from phones to desktops.",
+    points: [
+      "Responsive layouts",
+      "Reusable component libraries",
+      "Accessible, semantic markup",
+    ],
   },
   {
     icon: "fa fa-briefcase",
     title: "Web Development",
     description:
-      "Building full-stack web applications with React.js, Node.js and the MERN stack, with a focus on performance and scalability.",
+      "Full-stack applications on the MERN stack, built for performance and for the team that maintains them.",
+    points: [
+      "React & Redux front-ends",
+      "Node/Express REST APIs",
+      "MongoDB schema design",
+    ],
   },
   {
     icon: "fa fa-mobile",
     title: "Mobile App Development",
     description:
-      "Building and publishing offline-first Android apps on Google Play, from point-of-sale and billing systems to document and utility tools.",
+      "Offline-first Android apps, from point-of-sale and billing systems to everyday utility tools.",
+    points: [
+      "Offline-first data sync",
+      "Google Play publishing",
+      "React Native & native Android",
+    ],
   },
 ];
 
@@ -58,6 +80,121 @@ export const skills = [
   { label: "Node.js", value: 88 },
   { label: "MongoDB", value: 87 },
   { label: "React Native", value: 80 },
+];
+
+// Grouped for the Skills section. Every entry is evidenced by the bio, the
+// roles below or a shipped project in portfolio.js — nothing aspirational.
+export const techGroups = [
+  {
+    title: "Frontend",
+    icon: "fa fa-code",
+    items: [
+      "React.js",
+      "Next.js",
+      "TypeScript",
+      "JavaScript (ES6+)",
+      "Redux Toolkit",
+      "React Query",
+      "HTML5 & CSS3",
+      "Bootstrap",
+    ],
+  },
+  {
+    title: "Backend",
+    icon: "fa fa-server",
+    items: [
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "REST API Design",
+      "JWT Authentication",
+      "Mongoose",
+    ],
+  },
+  {
+    title: "Mobile",
+    icon: "fa fa-mobile",
+    items: [
+      "React Native",
+      "Android (Google Play)",
+      "Offline-first Sync",
+      "SQLite / Local Storage",
+    ],
+  },
+  {
+    title: "Workflow",
+    icon: "fa fa-cogs",
+    items: [
+      "Git & GitHub",
+      "Agile / Scrum",
+      "Responsive UI",
+      "Component Architecture",
+      "Vercel Deployment",
+    ],
+  },
+];
+
+// Short marks for the scrolling strip under the hero.
+export const marqueeItems = [
+  "React",
+  "Node.js",
+  "MongoDB",
+  "Express",
+  "TypeScript",
+  "Next.js",
+  "Redux Toolkit",
+  "React Native",
+  "REST APIs",
+  "Android",
+];
+
+export const experience = [
+  {
+    role: "Software Developer",
+    company: "DevBrains Lahore",
+    location: "Lahore, Pakistan",
+    period: "Nov 2025 — Present",
+    current: true,
+    description:
+      "Building core modules (patient intake, appointment scheduling and role-based dashboards) in a production medical web portal using React.js and TypeScript with responsive, accessible UIs.",
+    highlights: [
+      "Integrate REST APIs with React Query for fetching, caching and error states",
+      "Own authentication flows and form validation through a shared hooks layer",
+      "Maintain a reusable library of forms, modals and data tables used across the product",
+    ],
+  },
+  {
+    role: "MERN Stack Developer",
+    company: "PITC, Ministry of Energy (Power Division)",
+    location: "Lahore, Pakistan",
+    period: "Dec 2023 — Nov 2025",
+    description:
+      "Shipped consumer-facing modules in the power portal used by DISCOs — bill payment, installments, complaint registration and meter change — built with React.js and Redux.",
+    highlights: [
+      "Delivered a multi-step approval UI for bill-correction and meter-reading workflows",
+      "Built the full-stack Bill Detection module end to end with React and Node/Express",
+      "Owned schema design, REST endpoint authentication and deployment readiness",
+    ],
+  },
+  {
+    role: "Intern",
+    company: "AJK Electricity Department",
+    location: "Muzaffarabad, AJK",
+    period: "Jul 2023 — Aug 2023",
+    description:
+      "Supported departmental reporting: data analysis in Excel, office communications in Word and presentations for departmental initiatives.",
+    highlights: [],
+  },
+];
+
+export const education = [
+  {
+    degree: "BS. Computer Science",
+    school: "Mirpur University of Science and Technology, AJK",
+    period: "2019 — 2023",
+    description:
+      "Comprehensive grounding in software development, algorithms, databases and web technologies, with hands-on project work across modern languages and frameworks.",
+  },
 ];
 
 export const contactInfo = [

@@ -1,0 +1,145 @@
+/* About — editorial two-column: a sticky heading rail beside the bio,
+   closed out by a small bento of stat cards. No tabs anywhere. */
+
+.about-grid {
+  display: grid;
+  /* The heading column is deliberately narrower than the prose column. */
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(32px, 5vw, 76px);
+}
+
+/* Stretch (the default) matters: the aside column must span the row for the
+   sticky inner block to have anything to travel against. */
+.about-aside-inner {
+  position: sticky;
+  top: calc(var(--nav-h) + 32px);
+}
+
+.about-aside .section-title {
+  margin-bottom: 18px;
+}
+
+.about-lead {
+  max-width: 46ch;
+}
+
+/* --- Facts list --------------------------------------------------------- */
+.about-facts {
+  margin: clamp(28px, 4vw, 40px) 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.about-fact {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  gap: 8px 16px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.about-fact dt {
+  color: var(--text-3);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 2;
+}
+
+.about-fact dd {
+  margin: 0;
+  color: var(--text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.about-fact dd small {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-2);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* --- Bio ---------------------------------------------------------------- */
+.about-body p {
+  color: var(--text-2);
+  font-size: 16.5px;
+  max-width: 68ch;
+}
+
+.about-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Stat bento --------------------------------------------------------- */
+.about-stats {
+  margin-top: clamp(30px, 4vw, 44px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.about-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: clamp(18px, 2.4vw, 24px);
+}
+
+.about-stat i {
+  margin-bottom: 10px;
+  color: var(--accent-lift);
+  font-size: 17px;
+  line-height: 1;
+}
+
+.about-stat-value {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.4vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  color: transparent;
+  background-image: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-stat-label {
+  color: var(--text-2);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+/* --- Responsive --------------------------------------------------------- */
+@media (max-width: 980px) {
+  .about-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .about-aside-inner {
+    position: static;
+  }
+
+  .about-lead,
+  .about-body p {
+    max-width: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .about-fact {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .about-fact dt {
+    line-height: 1.6;
+  }
+
+  .about-stats {
+    gap: 14px;
+  }
+}

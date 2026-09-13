@@ -1,30 +1,34 @@
-import Header from "./components/Header.jsx";
-import Banner from "./components/Banner.jsx";
+import Nav from "./components/Nav.jsx";
+import Hero from "./components/Hero.jsx";
+import Marquee from "./components/Marquee.jsx";
 import About from "./components/About.jsx";
+import Skills from "./components/Skills.jsx";
+import Experience from "./components/Experience.jsx";
 import Services from "./components/Services.jsx";
-import Portfolio from "./components/Portfolio.jsx";
-import ContactInfo from "./components/ContactInfo.jsx";
-import ContactForm from "./components/ContactForm.jsx";
+import Work from "./components/Work.jsx";
+import Contact from "./components/Contact.jsx";
 import Footer from "./components/Footer.jsx";
-import Copyright from "./components/Copyright.jsx";
-import ScrollToTop from "./components/ScrollToTop.jsx";
 import SocialBar from "./components/SocialBar.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 import Chatbot from "./components/Chatbot.jsx";
+import "./styles/overlays.css";
 
 export default function App() {
   return (
     <>
-      <Header />
+      <Nav />
       <main>
-        <Banner />
+        <Hero />
+        <Marquee />
         <About />
+        <Skills />
+        <Experience />
         <Services />
-        <Portfolio />
-        <ContactInfo />
-        <ContactForm />
+        <Work />
+        <Contact />
       </main>
       <Footer />
-      <Copyright />
+      {/* Fixed chrome, outside <main> so it is not part of the document flow. */}
       <SocialBar />
       <ScrollToTop />
       <Chatbot />

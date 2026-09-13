@@ -1,0 +1,275 @@
+/* ===========================================================================
+   Contact — split section: pitch + details on the left, form card on the right.
+   Owns everything under `#contact`; primitives (.section, .card, .btn, .eyebrow)
+   come from base.css.
+   ======================================================================== */
+
+/* base.css has no danger token — the error status is the only place that needs
+   one, so it is declared here, scoped to this section. */
+#contact {
+  --contact-danger: #ff8a80;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
+}
+
+/* --- Left column -------------------------------------------------------- */
+.contact-aside {
+  min-width: 0;
+}
+
+.contact-pitch-title {
+  font-size: clamp(21px, 2.4vw, 26px);
+  margin-bottom: 12px;
+}
+
+.contact-pitch {
+  margin-bottom: 30px;
+  color: var(--text-2);
+  max-width: 46ch;
+}
+
+.contact-rows {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color 0.35s ease, transform 0.35s var(--ease),
+    box-shadow 0.35s ease;
+}
+
+.contact-row:hover {
+  border-color: rgba(91, 188, 46, 0.4);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.contact-row__badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  border: 1px solid rgba(91, 188, 46, 0.28);
+  background: var(--accent-soft);
+  color: var(--accent-lift);
+  font-size: 18px;
+}
+
+.contact-row__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.contact-row__label {
+  color: var(--text-3);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.contact-row__value {
+  color: var(--text);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+a.contact-row__value:hover {
+  color: var(--accent-lift);
+}
+
+/* --- Social row --------------------------------------------------------- */
+.contact-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.contact-social a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: var(--bg-2);
+  color: var(--text-2);
+  font-size: 16px;
+  transition: color 0.3s ease, border-color 0.3s ease,
+    background-color 0.3s ease, transform 0.3s var(--ease);
+}
+
+.contact-social a:hover,
+.contact-social a:focus-visible {
+  color: var(--accent-lift);
+  border-color: rgba(91, 188, 46, 0.55);
+  background: var(--accent-soft);
+  transform: translateY(-3px);
+}
+
+/* Inline brand marks (Fiverr) inherit colour via fill="currentColor"; the
+   height follows SocialIcon's cropped 24:7.176 viewBox. */
+.contact-social .social-svg {
+  width: 1.55em;
+  height: 0.47em;
+  display: block;
+}
+
+/* --- Form card ---------------------------------------------------------- */
+.contact-form-wrap {
+  min-width: 0;
+}
+
+.contact-form {
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.contact-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.contact-field--full {
+  grid-column: 1 / -1;
+}
+
+.contact-field input,
+.contact-field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--bg-3);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.contact-field textarea {
+  resize: vertical;
+  min-height: 150px;
+  display: block;
+}
+
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: var(--text-3);
+  opacity: 1;
+}
+
+.contact-field input:hover,
+.contact-field textarea:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.contact-field input:focus,
+.contact-field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--bg-2);
+  box-shadow: 0 0 0 3px rgba(91, 188, 46, 0.2);
+}
+
+/* Chrome paints autofilled inputs with an opaque near-white slab that ignores
+   `background`. The only lever is a giant inset shadow plus a text-fill colour;
+   the absurd transition delay keeps the yellow tint from flashing back. */
+.contact-field input:-webkit-autofill,
+.contact-field input:-webkit-autofill:hover,
+.contact-field input:-webkit-autofill:focus,
+.contact-field textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-3) inset;
+  box-shadow: 0 0 0 1000px var(--bg-3) inset;
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+
+.contact-field input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-3) inset,
+    0 0 0 3px rgba(91, 188, 46, 0.2);
+  box-shadow: 0 0 0 1000px var(--bg-3) inset, 0 0 0 3px rgba(91, 188, 46, 0.2);
+}
+
+/* --- Actions + status --------------------------------------------------- */
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 20px;
+  margin-top: 20px;
+}
+
+.contact-note {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 13px;
+}
+
+/* Always rendered, so a status message never shifts the card's height. */
+.contact-status {
+  min-height: 22px;
+  margin: 12px 0 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.contact-status.is-ok {
+  color: var(--accent-lift);
+}
+
+.contact-status.is-error {
+  color: var(--contact-danger);
+}
+
+/* --- Responsive --------------------------------------------------------- */
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .contact-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-row {
+    gap: 13px;
+    padding: 13px 14px;
+  }
+
+  .contact-row__badge {
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+  }
+
+  .contact-actions .btn {
+    width: 100%;
+  }
+}

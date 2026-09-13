@@ -1,0 +1,563 @@
+/* ===========================================================================
+   Work — the portfolio grid.
+
+   A bento layout: the first project of the current filter spans two columns
+   and gets a larger image, a "Featured" badge and its full description;
+   everything else is a standard card. Thumbnails come in wildly different
+   aspect ratios (app cards are pre-composed 2:1 PNGs, web screenshots vary),
+   so every image sits in a fixed aspect-ratio box with `object-fit: cover` and
+   rows always align.
+
+   Mobile-first: one column with no spans, so the featured tile can never spill
+   into an implicit column.
+   ======================================================================== */
+
+/* --- Filter bar --------------------------------------------------------- */
+.work-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: clamp(32px, 4vw, 46px);
+}
+
+.work-filter {
+  padding: 10px 20px;
+  border: 1px solid var(--line-2);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-2);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  transition: color 0.3s ease, border-color 0.3s ease, background-color 0.3s ease,
+    transform 0.3s var(--ease), box-shadow 0.3s ease;
+}
+
+.work-filter:hover {
+  border-color: rgba(91, 188, 46, 0.5);
+  background: var(--accent-soft);
+  color: var(--text);
+  transform: translateY(-2px);
+}
+
+.work-filter.is-active {
+  border-color: transparent;
+  background-image: var(--grad);
+  color: var(--on-accent);
+  box-shadow: 0 12px 30px -12px rgba(91, 188, 46, 0.75);
+}
+
+/* --- Grid --------------------------------------------------------------- */
+.work-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
+
+/* The Reveal wrapper is the grid item; the card fills it so every card in a
+   row ends up the same height. */
+.work-item {
+  display: flex;
+  min-width: 0;
+}
+
+/* --- Card --------------------------------------------------------------- */
+/* Double class: this has to beat `.card`'s own padding regardless of the
+   order the stylesheets happen to land in. */
+.work-card.card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  /* Never `overflow: hidden` here — it would collapse the `preserve-3d`
+     context that `.tilt` sets up and flatten the translateZ lifts below.
+     The media box does the clipping instead. */
+  overflow: visible;
+}
+
+/* --- Thumbnail ---------------------------------------------------------- */
+/* The sources are deliberately uneven: the Android cards are pre-composed 2:1
+   PNGs that are mostly a bright white or pale blue field, the web projects are
+   dense screenshots. Untreated, the light ones glare against a near-black page
+   and the row looks like two different sections. Four layers even them out:
+
+     .work-card__img     a rest-state brightness/saturation knock-back
+     .work-card__scrim   a flat veil plus a bottom gradient in the card's own
+                         surface colour, so the image dissolves into the copy
+     ::before            an accent wash that blooms on hover
+     ::after             an inset hairline, so the image reads as a framed
+                         panel rather than a rectangle floating on the card
+
+   All of it resolves to (near) full strength on hover — a recruiter still gets
+   to see what the project actually looks like. `isolation` keeps the wash's
+   blend mode inside the media box. */
+.work-card__media {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  aspect-ratio: 16 / 10;
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+  background: var(--bg-2);
+}
+
+.work-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: saturate(0.88) brightness(0.84) contrast(1.05);
+  transition: transform 0.65s var(--ease), filter 0.5s ease;
+}
+
+.work-card__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Fallback first, for engines without color-mix(). */
+  background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.88),
+      rgba(0, 0, 0, 0.42) 38%,
+      transparent 78%
+    ),
+    linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.28));
+  background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--bg-2) 96%, transparent),
+      color-mix(in srgb, var(--bg-2) 55%, transparent) 38%,
+      transparent 78%
+    ),
+    /* The flat veil is what actually tames a full-white app card — a bottom
+       gradient alone leaves the top half glaring. */
+      linear-gradient(
+        color-mix(in srgb, var(--bg-0) 30%, transparent),
+        color-mix(in srgb, var(--bg-0) 30%, transparent)
+      );
+  transition: opacity 0.45s ease;
+}
+
+.work-card__media::before,
+.work-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.work-card__media::before {
+  z-index: 2;
+  background-image: var(--grad);
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+/* The frame: an inner hairline plus a light catch along the top edge, the same
+   trick `.card` uses to read as a raised panel. */
+.work-card__media::after {
+  z-index: 3;
+  box-shadow: inset 0 0 0 1px var(--line-2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: box-shadow 0.45s ease;
+}
+
+/* --- Hover: the treatment lifts ----------------------------------------- */
+.work-card:hover .work-card__img,
+.work-card:focus-within .work-card__img {
+  transform: scale(1.05);
+  filter: none;
+}
+
+.work-card:hover .work-card__scrim,
+.work-card:focus-within .work-card__scrim {
+  opacity: 0.45;
+}
+
+.work-card:hover .work-card__media::before,
+.work-card:focus-within .work-card__media::before {
+  opacity: 0.55;
+}
+
+.work-card:hover .work-card__media::after,
+.work-card:focus-within .work-card__media::after {
+  box-shadow: inset 0 0 0 1px rgba(91, 188, 46, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+/* --- Featured badge ----------------------------------------------------- */
+.work-card__badge {
+  position: absolute;
+  z-index: 4;
+  top: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background-image: var(--grad);
+  color: var(--on-accent);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1;
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.95);
+}
+
+/* --- Card body ---------------------------------------------------------- */
+.work-card__body {
+  position: relative;
+  z-index: 2;
+  /* The body is a child of the `.tilt` plane, so it needs its own preserve-3d
+     for the translateZ lifts on the title/label/CTA below to survive — a flat
+     body would squash them back into its surface. */
+  transform-style: preserve-3d;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 22px 24px 26px;
+}
+
+/* The seam where the thumbnail meets the copy: a gradient rule that wipes in
+   on hover. It is anchored to whichever edge the image actually meets, so the
+   side-by-side featured tile flips it vertical (further down). */
+.work-card__body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background-image: var(--grad);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.55s var(--ease), opacity 0.35s ease;
+}
+
+.work-card:hover .work-card__body::before,
+.work-card:focus-within .work-card__body::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* A tag, not loose accent text. */
+.work-card__cat {
+  align-self: flex-start;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 12px;
+  padding: 5px 12px;
+  border: 1px solid rgba(91, 188, 46, 0.28);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-lift);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  transform: translateZ(22px);
+}
+
+.work-card__cat::before {
+  content: "";
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Clamped to two lines on purpose: a three-line title in one card pushes its
+   copy down and breaks the rhythm of the whole row. The `min-height` holds the
+   second line open for the short titles so they still line up. */
+.work-card__title {
+  margin: 0 0 10px;
+  font-size: 19px;
+  line-height: 1.3;
+  min-height: 2.6em;
+  transform: translateZ(34px);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.work-card__desc {
+  margin: 0 0 14px;
+  color: var(--text-2);
+  font-size: 14.5px;
+  line-height: 1.65;
+  transform: translateZ(14px);
+  /* Standard cards clamp; the featured tile opens up (below). */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* `margin-top: auto` pins the call to action to the bottom edge, so cards in a
+   row line up no matter how long the description is. */
+.work-card__actions {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  transform: translateZ(40px);
+}
+
+.work-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.work-card__cta:hover {
+  color: var(--accent-lift);
+}
+
+/* The arrow is a hover reveal. Only its opacity changes, never its box, so the
+   CTA never reflows as it appears. */
+.work-card__arrow {
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: transform 0.35s var(--ease), opacity 0.3s ease;
+}
+
+.work-card:hover .work-card__arrow,
+.work-card:focus-within .work-card__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Pointing at the link itself pushes it the rest of the way. Declared last so
+   it beats the card-level rule at equal specificity. */
+.work-card__cta:hover .work-card__arrow,
+.work-card__btn:hover .work-card__arrow {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+.work-card__btn {
+  padding-block: 11px;
+  font-size: 14px;
+}
+
+/* --- Load more ---------------------------------------------------------- */
+.work-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: clamp(36px, 4.5vw, 54px);
+}
+
+.work-count {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 13.5px;
+  letter-spacing: 0.03em;
+}
+
+/* --- Two columns -------------------------------------------------------- */
+@media (min-width: 760px) {
+  .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .work-item--featured {
+    grid-column: span 2;
+  }
+
+  .work-card--featured .work-card__media {
+    aspect-ratio: 21 / 9;
+  }
+
+  /* Featured earns more room and a bigger voice: full description, no title
+     clamp, roomier padding. */
+  .work-card--featured .work-card__body {
+    padding: 28px 28px 30px;
+  }
+
+  .work-card--featured .work-card__cat {
+    font-size: 11px;
+    padding: 6px 14px;
+    margin-bottom: 14px;
+  }
+
+  .work-card--featured .work-card__title {
+    display: block;
+    font-size: 23px;
+    min-height: 0;
+    overflow: visible;
+    -webkit-line-clamp: none;
+    line-clamp: none;
+  }
+
+  .work-card--featured .work-card__desc {
+    display: block;
+    -webkit-line-clamp: none;
+    line-clamp: none;
+    overflow: visible;
+  }
+}
+
+/* --- Featured goes side-by-side ----------------------------------------- */
+@media (min-width: 900px) {
+  .work-card--featured {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  /* Height is driven by the copy column; the image just fills whatever it
+     gets, which keeps the featured tile close to the standard cards' height. */
+  .work-card--featured .work-card__media {
+    aspect-ratio: auto;
+    height: 100%;
+    min-height: 300px;
+    border-radius: calc(var(--radius) - 1px) 0 0 calc(var(--radius) - 1px);
+  }
+
+  .work-card--featured .work-card__body {
+    padding: 36px 36px 36px 34px;
+  }
+
+  /* The seam is now the left edge of the copy column, so the rule turns. */
+  .work-card--featured .work-card__body::before {
+    top: 36px;
+    bottom: 36px;
+    left: 0;
+    right: auto;
+    width: 2px;
+    height: auto;
+    transform: scaleY(0);
+    transform-origin: center top;
+  }
+
+  .work-card--featured:hover .work-card__body::before,
+  .work-card--featured:focus-within .work-card__body::before {
+    transform: scaleY(1);
+  }
+
+  .work-card--featured .work-card__title {
+    font-size: clamp(24px, 2.4vw, 30px);
+    margin-bottom: 12px;
+  }
+
+  .work-card--featured .work-card__desc {
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+}
+
+/* --- Three columns ------------------------------------------------------ */
+@media (min-width: 1080px) {
+  .work-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 26px;
+  }
+}
+
+/* --- Small screens ------------------------------------------------------ */
+@media (max-width: 420px) {
+  .work-filter {
+    padding: 9px 16px;
+    font-size: 13px;
+  }
+
+  .work-card__body {
+    padding: 20px 18px 22px;
+  }
+
+  .work-card__body::before {
+    left: 18px;
+    right: 18px;
+  }
+
+  .work-card__badge {
+    top: 12px;
+    left: 12px;
+    padding: 6px 11px;
+    font-size: 10px;
+  }
+}
+
+/* --- Touch -------------------------------------------------------------- */
+/* No hover to resolve the treatment with, so the thumbnails rest closer to
+   full strength and the CTA arrow is simply always there. */
+@media (hover: none) {
+  .work-card__img {
+    filter: saturate(0.95) brightness(0.92);
+  }
+
+  .work-card__scrim {
+    opacity: 0.78;
+  }
+
+  .work-card__arrow {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Reduced motion ----------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .work-card__cat,
+  .work-card__title,
+  .work-card__desc,
+  .work-card__actions {
+    transform: none;
+  }
+
+  .work-card__img,
+  .work-card__scrim,
+  .work-card__media::before,
+  .work-card__media::after,
+  .work-card__body::before,
+  .work-card__arrow,
+  .work-filter {
+    transition: none;
+  }
+
+  .work-card:hover .work-card__img,
+  .work-card:focus-within .work-card__img {
+    transform: none;
+  }
+
+  /* Nothing slides or wipes: the arrow just stays put and the seam rule only
+     changes opacity. */
+  .work-card__arrow,
+  .work-card:hover .work-card__arrow,
+  .work-card:focus-within .work-card__arrow,
+  .work-card__cta:hover .work-card__arrow,
+  .work-card__btn:hover .work-card__arrow {
+    opacity: 1;
+    transform: none;
+  }
+
+  .work-card__body::before,
+  .work-card--featured .work-card__body::before,
+  .work-card:hover .work-card__body::before,
+  .work-card:focus-within .work-card__body::before,
+  .work-card--featured:hover .work-card__body::before,
+  .work-card--featured:focus-within .work-card__body::before {
+    transform: none;
+  }
+}

@@ -1,0 +1,109 @@
+/* Fixed page chrome: the vertical social rail and the back-to-top button. */
+
+/* --- Social rail (SocialBar.jsx) ---------------------------------------- */
+/* Bottom-left, so it never collides with the chat launcher and the rocket on
+   the right. Hidden below 1200px, where the footer carries the same links. */
+.social-bar {
+  position: fixed;
+  left: 40px;
+  bottom: 0;
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-bar ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 22px;
+}
+
+.social-bar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 19px;
+  line-height: 1;
+  color: var(--text-3);
+  transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+}
+
+.social-bar a:hover,
+.social-bar a:focus-visible {
+  color: var(--accent-lift);
+  background-color: var(--accent-soft);
+  transform: translateY(-3px);
+}
+
+/* Inline brand marks (Fiverr) sit alongside Font Awesome glyphs, so they are
+   sized in `em` off the surrounding font-size and inherit colour through
+   fill="currentColor". The height follows the cropped 24:7.176 viewBox. */
+.social-svg {
+  width: 1.5em;
+  height: 0.45em;
+  display: block;
+}
+
+.social-bar-line {
+  width: 1px;
+  height: 96px;
+  background: linear-gradient(to bottom, var(--line-2), transparent);
+}
+
+@media (max-width: 1199px) {
+  .social-bar {
+    display: none;
+  }
+}
+
+/* --- Back to top (ScrollToTop.jsx) -------------------------------------- */
+/* Sits above the chat launcher, which owns the very corner. */
+#toTop {
+  position: fixed;
+  right: 40px;
+  bottom: 112px;
+  z-index: 999;
+  cursor: pointer;
+  text-align: center;
+}
+
+#toTop i {
+  display: block;
+  width: 46px;
+  height: 46px;
+  line-height: 46px;
+  border-radius: 50%;
+  font-size: 17px;
+  /* The rocket glyph points north-east; rotating it puts the nose up. */
+  transform: rotate(-45deg);
+  background-image: var(--grad);
+  color: var(--on-accent);
+  box-shadow: 0 12px 30px -10px rgba(91, 188, 46, 0.7);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s ease;
+}
+
+#toTop:hover i {
+  transform: rotate(-45deg) translate(2px, -2px);
+  box-shadow: 0 18px 40px -12px rgba(91, 188, 46, 0.85);
+}
+
+@media (max-width: 767px) {
+  #toTop {
+    right: 20px;
+    bottom: 84px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #toTop i,
+  #toTop:hover i {
+    transform: rotate(-45deg);
+    transition: none;
+  }
+}

@@ -1,0 +1,535 @@
+/* ===========================================================================
+   Design system — the foundation every section is built on.
+
+   This replaces the vendored template (bootstrap + style.css + responsive.css).
+   Only Font Awesome is still loaded from public/css, for its icon glyphs.
+
+   Everything here is layout-and-primitive only. Each section owns its own
+   stylesheet next to its component; nothing below should need editing to add
+   a new section.
+   ======================================================================== */
+
+/* --- Tokens ------------------------------------------------------------- */
+:root {
+  --bg-0: #05070a; /* page base */
+  --bg-1: #090d13; /* alternating band */
+  --bg-2: #0f1520; /* card surface */
+  --bg-3: #161e2b; /* raised surface, inputs */
+
+  --line: rgba(255, 255, 255, 0.08);
+  --line-2: rgba(255, 255, 255, 0.14);
+
+  --text: #e9eef5;
+  --text-2: #a3b1c2;
+  --text-3: #6f7d92;
+
+  --accent: #5bbc2e;
+  --accent-2: #2ee6c5;
+  --accent-lift: #86e25c;
+  --accent-soft: rgba(91, 188, 46, 0.12);
+  --grad: linear-gradient(135deg, #5bbc2e 0%, #2ee6c5 100%);
+  --on-accent: #04240e; /* text that sits on an accent fill */
+
+  --surface: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.015)
+  );
+
+  --shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9);
+  --shadow-lift: 0 34px 70px -24px rgba(0, 0, 0, 0.95);
+
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Sora", "Inter", system-ui, sans-serif;
+
+  --radius: 16px;
+  --radius-lg: 22px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --container: 1200px;
+  --gutter: 24px;
+  --nav-h: 76px;
+}
+
+/* --- Reset -------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Anchored sections must clear the fixed nav. */
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-0);
+  color: var(--text-2);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  /* Glows and tilted cards overhang their boxes. */
+  overflow-x: hidden;
+}
+
+/* Film grain over the whole page. Large flat areas of near-black with wide
+   radial gradients band visibly on 8-bit displays; a little noise breaks the
+   banding up and is most of why a dark UI reads as crafted rather than flat.
+   Inline SVG turbulence so it costs no request. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 0.5em;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  /* Evens the line lengths of a wrapped heading instead of leaving one orphan
+     word on the last line. */
+  text-wrap: balance;
+}
+
+p {
+  margin: 0 0 1em;
+  /* Same idea for body copy, but `pretty` only guards the last line so the
+     rest of the paragraph keeps normal greedy wrapping. */
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--accent-lift);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+a:hover {
+  color: var(--accent-2);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-lift);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* --- Scrollbar ---------------------------------------------------------- */
+* {
+  scrollbar-color: #26313f var(--bg-0);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-0);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #26313f;
+  border: 2px solid var(--bg-0);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a4757;
+}
+
+/* --- Layout primitives -------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: clamp(72px, 9vw, 130px);
+  isolation: isolate;
+}
+
+.section--alt {
+  background: var(--bg-1);
+}
+
+/* Hairline between bands, brightest in the middle. */
+.section--line::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.14),
+    transparent
+  );
+}
+
+/* One soft accent bloom per section, behind the content. */
+.section--glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(44% 40% at 10% 0%, rgba(91, 188, 46, 0.09), transparent 70%),
+    radial-gradient(44% 40% at 90% 100%, rgba(46, 230, 197, 0.08), transparent 70%);
+}
+
+.grid {
+  display: grid;
+  gap: 24px;
+}
+
+.grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* --- Section headings --------------------------------------------------- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+  padding: 6px 14px;
+  border: 1px solid rgba(91, 188, 46, 0.3);
+  border-radius: 30px;
+  background: var(--accent-soft);
+  color: var(--accent-lift);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.section-head {
+  max-width: 720px;
+  margin-bottom: clamp(40px, 5vw, 64px);
+}
+
+.section-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.section-title {
+  font-size: clamp(30px, 4.2vw, 46px);
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.section-title em {
+  font-style: normal;
+  color: transparent;
+  background-image: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Capped by character count, not pixels: ~62ch is the readable measure
+   regardless of how the fluid type scale resolves at a given viewport. */
+.section-sub {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--text-2);
+  font-size: 16.5px;
+}
+
+.section-head--center .section-sub {
+  margin-inline: auto;
+}
+
+/* --- Buttons ------------------------------------------------------------ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 28px;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s ease,
+    background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.btn--primary {
+  position: relative;
+  overflow: hidden;
+  background-image: var(--grad);
+  color: var(--on-accent);
+  box-shadow: 0 14px 34px -12px rgba(91, 188, 46, 0.75);
+}
+
+.btn--primary:hover {
+  color: var(--on-accent);
+  transform: translateY(-3px);
+  box-shadow: 0 22px 48px -14px rgba(91, 188, 46, 0.9);
+}
+
+/* A specular band that sweeps across on hover. Parked off the left edge and
+   driven by `left` rather than opacity so it reads as light travelling over
+   the surface, not a flash. */
+.btn--primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 100%;
+  pointer-events: none;
+  transform: skewX(-22deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.38),
+    transparent
+  );
+  transition: left 0.6s var(--ease);
+}
+
+.btn--primary:hover::after {
+  left: 125%;
+}
+
+.btn--ghost {
+  background: rgba(8, 12, 18, 0.72);
+  border-color: var(--line-2);
+  color: var(--text);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.btn--ghost:hover {
+  background: rgba(14, 21, 30, 0.92);
+  border-color: rgba(91, 188, 46, 0.55);
+  color: var(--text);
+  transform: translateY(-3px);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  transform: none;
+  cursor: default;
+}
+
+/* --- Card surface ------------------------------------------------------- */
+/* The inset top highlight is what sells a raised surface: real objects catch
+   light on their top edge. Without it a bordered dark rectangle reads as a
+   hole punched in the page rather than a panel sitting on it. */
+.card {
+  position: relative;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  transition: border-color 0.4s ease, box-shadow 0.4s ease,
+    background-color 0.4s ease;
+}
+
+.card:hover {
+  border-color: rgba(91, 188, 46, 0.34);
+  box-shadow: var(--shadow-lift), inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 50px -24px rgba(91, 188, 46, 0.45);
+}
+
+/* --- Tilt: the shared 3D mechanic --------------------------------------- */
+/* Tilt.jsx publishes --tilt-x/-y (rotation) and --tilt-lx/-ly (glare origin);
+   the transform lives here so it can be withheld per input type and under
+   reduced motion without the component knowing. */
+.tilt {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --tilt-lx: 50%;
+  --tilt-ly: 50%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tilt {
+    transition: transform 0.5s var(--ease), border-color 0.4s ease,
+      box-shadow 0.4s ease;
+  }
+
+  .tilt:hover {
+    /* No transform transition while tracking: an eased transform lags a frame
+       behind the cursor and reads as drag. It returns on pointer-leave. */
+    transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    transform: perspective(1000px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y))
+      translateZ(12px);
+  }
+
+  .tilt::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    background: radial-gradient(
+      40% 40% at var(--tilt-lx) var(--tilt-ly),
+      rgba(255, 255, 255, 0.13),
+      transparent 70%
+    );
+  }
+
+  .tilt:hover::after {
+    opacity: 1;
+  }
+}
+
+/* --- Scroll reveal (Reveal.jsx) ----------------------------------------- */
+.reveal {
+  opacity: 0;
+  transition: opacity 0.7s ease, transform 0.7s var(--ease);
+  will-change: opacity, transform;
+}
+
+.reveal-up {
+  transform: translateY(40px);
+}
+
+.reveal-down {
+  transform: translateY(-40px);
+}
+
+.reveal-left {
+  transform: translateX(40px);
+}
+
+.reveal-right {
+  transform: translateX(-40px);
+}
+
+.reveal-none {
+  transform: none;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Utilities ---------------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- Responsive --------------------------------------------------------- */
+@media (max-width: 900px) {
+  .grid--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 15.5px;
+  }
+
+  .grid--2,
+  .grid--3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- Reduced motion ----------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .tilt,
+  .tilt:hover {
+    transform: none;
+    transition: none;
+  }
+
+  .tilt::after {
+    display: none;
+  }
+
+  .btn--primary::after {
+    display: none;
+  }
+}

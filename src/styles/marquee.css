@@ -1,0 +1,75 @@
+/* Infinite tech-stack strip between the hero and the page proper. Purely
+   decorative — the same list is presented properly in the Skills section, so
+   the component is aria-hidden and nothing is lost by not reading it. */
+
+.marquee {
+  position: relative;
+  overflow: hidden;
+  padding-block: 20px;
+  border-block: 1px solid var(--line);
+  background: var(--bg-1);
+  /* Fade both ends so items enter and leave instead of being cut off. */
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 34s linear infinite;
+}
+
+.marquee-row {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+  padding-right: 44px;
+}
+
+.marquee-row li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-3);
+  transition: color 0.3s ease;
+}
+
+.marquee:hover .marquee-row li {
+  color: var(--text-2);
+}
+
+.marquee-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-image: var(--grad);
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}

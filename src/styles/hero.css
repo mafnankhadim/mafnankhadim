@@ -1,0 +1,358 @@
+/* Full-viewport hero: copy on the left, the WebGL solid in the space on the
+   right (HeroScene positions itself there on wide viewports). */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: calc(var(--nav-h) + 40px) 80px;
+  overflow: hidden;
+  background: var(--bg-0);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-copy {
+  max-width: 620px;
+}
+
+/* Staggered entrance on load. The hero is above the fold, so it is the one
+   place a scroll-triggered Reveal can't help — without this the whole block
+   just pops in at once. `both` holds the from-state during the delay. */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-copy > * {
+  animation: hero-in 0.85s var(--ease) both;
+}
+
+.hero-copy > *:nth-child(1) {
+  animation-delay: 0.06s;
+}
+.hero-copy > *:nth-child(2) {
+  animation-delay: 0.14s;
+}
+.hero-copy > *:nth-child(3) {
+  animation-delay: 0.22s;
+}
+.hero-copy > *:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.hero-copy > *:nth-child(5) {
+  animation-delay: 0.38s;
+}
+.hero-copy > *:nth-child(6) {
+  animation-delay: 0.46s;
+}
+
+/* --- Depth layers -------------------------------------------------------- */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Carries the hero on its own if WebGL never starts (reduced motion, no
+   context, a failed chunk load). */
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 50% at 74% 42%, rgba(91, 188, 46, 0.16), transparent 70%),
+    radial-gradient(45% 45% at 88% 78%, rgba(46, 230, 197, 0.12), transparent 70%),
+    radial-gradient(70% 60% at 8% 22%, rgba(30, 58, 92, 0.28), transparent 72%);
+}
+
+/* Cursor spotlight. Hero.jsx writes --mx/--my; the defaults keep it parked
+   centre-right so the layer still reads before the pointer ever enters. */
+.hero-spot {
+  --mx: 70%;
+  --my: 45%;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    32% 42% at var(--mx) var(--my),
+    rgba(91, 188, 46, 0.13),
+    transparent 70%
+  );
+  transition: background 0.2s linear;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 45%, #000, transparent 100%);
+  mask-image: radial-gradient(70% 60% at 50% 45%, #000, transparent 100%);
+}
+
+/* --- Copy ---------------------------------------------------------------- */
+.hero-badge {
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 12.5px;
+}
+
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-lift);
+  animation: hero-pulse 2.2s ease-out infinite;
+}
+
+@keyframes hero-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(134, 226, 92, 0.65);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 10px rgba(134, 226, 92, 0);
+  }
+}
+
+.hero-title {
+  margin-bottom: 10px;
+  font-size: clamp(38px, 6.2vw, 68px);
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.hero-title em {
+  display: block;
+  font-style: normal;
+  color: transparent;
+  background-image: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Fixed-height slot: the roles are stacked on top of each other, so the lines
+   below never shift as they swap. */
+.hero-roles {
+  margin: 0 0 20px;
+  height: 1.35em;
+}
+
+.hero-roles-slot {
+  position: relative;
+  display: block;
+  height: 100%;
+}
+
+.hero-role {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 700;
+  color: var(--text);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s var(--ease);
+}
+
+.hero-role.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.hero-lead {
+  max-width: 560px;
+  margin-bottom: 30px;
+  color: var(--text-2);
+  font-size: 16.5px;
+  line-height: 1.75;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 44px;
+}
+
+/* --- Stats --------------------------------------------------------------- */
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.hero-stats li {
+  flex: 1 1 150px;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.hero-stats strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: transparent;
+  background-image: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Direct child only: CountUp renders its own spans inside the <strong>, and a
+   bare `.hero-stats span` would shrink the figure down to label size. */
+.hero-stats li > span {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--text-3);
+}
+
+/* --- Scroll cue ---------------------------------------------------------- */
+.hero-scroll {
+  position: absolute;
+  left: 50%;
+  bottom: 26px;
+  z-index: 2;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: color 0.25s ease;
+}
+
+.hero-scroll:hover {
+  color: var(--accent-lift);
+}
+
+.hero-scroll i {
+  font-size: 18px;
+  animation: hero-bob 1.8s ease-in-out infinite;
+}
+
+@keyframes hero-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+@media (max-width: 980px) {
+  .hero {
+    min-height: auto;
+    padding-block: calc(var(--nav-h) + 56px) 96px;
+    text-align: center;
+  }
+
+  /* The copy sits centred over the solid at this width instead of beside it,
+     so the scene drops back to keep the headline legible. */
+  .hero-canvas {
+    opacity: 0.4;
+  }
+
+  .hero-copy {
+    max-width: none;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-lead {
+    margin-inline: auto;
+  }
+
+  .hero-roles-slot {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-role {
+    inset-inline-start: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-stats li {
+    flex-basis: 100%;
+  }
+
+  .hero-role {
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-dot,
+  .hero-scroll i {
+    animation: none;
+  }
+
+  .hero-copy > * {
+    animation: none;
+  }
+
+  .hero-spot {
+    display: none;
+  }
+
+  .hero-role {
+    transition: none;
+  }
+}
+
+/* No pointer to track, so the spotlight would sit frozen wherever it defaulted. */
+@media (pointer: coarse) {
+  .hero-spot {
+    display: none;
+  }
+}

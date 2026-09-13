@@ -1,0 +1,252 @@
+/* Fixed top navigation — transparent over the hero, frosted once scrolled. */
+
+.nav {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 1000;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  transition: background-color 0.35s ease, box-shadow 0.35s ease,
+    border-color 0.35s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.nav.is-scrolled {
+  background: rgba(5, 7, 10, 0.72);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom-color: var(--line);
+  box-shadow: 0 10px 40px -18px rgba(0, 0, 0, 0.9);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  /* The drawer is a sibling inside this same header, and covers the viewport.
+     The bar has to stay above it or the burger (the only way to close the
+     menu by pointer) disappears the moment the menu opens. */
+  position: relative;
+  z-index: 2;
+}
+
+.nav-logo img {
+  width: auto;
+  height: 30px;
+}
+
+/* Read-progress hairline along the bottom edge of the bar. Scaled from the
+   left on the X axis only, so it animates on the compositor. */
+.nav-progress {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  z-index: 3;
+  width: 100%;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background-image: var(--grad);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav.is-scrolled .nav-progress {
+  opacity: 1;
+}
+
+/* --- Desktop links ------------------------------------------------------- */
+.nav-links ul {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-links a {
+  position: relative;
+  display: block;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: var(--text-2);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: color 0.25s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.is-active {
+  color: var(--text);
+}
+
+/* Gradient underline that grows from the centre on the active/hovered link. */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background-image: var(--grad);
+  transform: scaleX(0);
+  transition: transform 0.3s var(--ease);
+}
+
+.nav-links a:hover::after,
+.nav-links a.is-active::after {
+  transform: scaleX(1);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-cta {
+  padding: 10px 22px;
+  font-size: 13.5px;
+}
+
+/* --- Burger -------------------------------------------------------------- */
+.nav-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-burger span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--text);
+  transition: transform 0.3s var(--ease), opacity 0.2s ease;
+}
+
+/* Collapse the three bars into a cross. */
+.nav-burger.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-burger.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-burger.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* --- Full-screen drawer -------------------------------------------------- */
+.nav-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  padding: var(--nav-h) 24px 40px;
+  background: rgba(5, 7, 10, 0.97);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s;
+}
+
+.nav-drawer.is-open {
+  z-index: 1;
+  opacity: 1;
+  visibility: visible;
+}
+
+.nav-drawer ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.nav-drawer li {
+  width: 100%;
+  max-width: 360px;
+  /* Staggered entrance, indexed by the --i each <li> carries. */
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.4s ease, transform 0.4s var(--ease);
+  transition-delay: calc(var(--i) * 60ms);
+}
+
+.nav-drawer.is-open li {
+  opacity: 1;
+  transform: none;
+}
+
+.nav-drawer a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.nav-drawer a:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--accent-lift);
+}
+
+.nav-drawer-num {
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+/* Nothing behind the drawer should scroll. */
+body.nav-open {
+  overflow: hidden;
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+@media (max-width: 980px) {
+  .nav-links,
+  .nav-cta {
+    display: none;
+  }
+
+  .nav-burger {
+    display: flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-drawer li {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  .nav-links a::after {
+    transition: none;
+  }
+}

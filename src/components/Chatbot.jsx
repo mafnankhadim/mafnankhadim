@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ChatMessage from "./ChatMessage.jsx";
 import { ASSISTANT_NAME, GREETING, SUGGESTIONS } from "../data/chatbot.js";
+import "../styles/chatbot.css";
 
 // Vercel serves api/chat.js here in production; vite.config.js mounts the same
 // handler at the same path in dev. Override with VITE_CHAT_ENDPOINT if the
