@@ -24,7 +24,7 @@ export const bannerLead =
 // CV lives on Google Drive rather than in public/, so it can be swapped
 // without redeploying the site.
 export const CV_URL =
-  "https://drive.google.com/file/d/1RCVgFINzjqf5Pp9PXJSNz4v08mPFOMao/view?usp=sharing";
+  "https://drive.google.com/file/d/1wfXAyukKaXJb33h82SPUDfQTgwdoZL2C/view?usp=sharing";
 
 // Target of the header "Hire Me" button. Public seller profile — not the
 // /seller_dashboard URL, which only resolves for a logged-in seller.
